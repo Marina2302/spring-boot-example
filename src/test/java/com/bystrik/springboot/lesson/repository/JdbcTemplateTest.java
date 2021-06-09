@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.bystrik.springboot.lesson.IntegrationTestBase;
 import com.bystrik.springboot.lesson.entity.CompanyEntity;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
