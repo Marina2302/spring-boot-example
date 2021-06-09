@@ -10,6 +10,8 @@ import com.bystrik.springboot.lesson.dto.EmployeeFilter;
 import com.bystrik.springboot.lesson.entity.EmployeeEntity;
 import com.bystrik.springboot.lesson.projection.EmployeeNameView;
 import com.bystrik.springboot.lesson.projection.EmployeeNativeView;
+import com.bystrik.springboot.lesson.util.QPredicates;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,23 @@ class EmployeeRepositoryTest extends IntegrationTestBase {
                                                               .and(employeeEntity.salary.goe(1000));
         Page<EmployeeEntity> allValue = employeeRepository.findAll(predicate, Pageable.unpaged());
         assertThat(allValue.getContent(), hasSize(1));
+    }
+
+    @Test
+    void testQPredicates() {
+        EmployeeFilter filter = EmployeeFilter.builder()
+                                              .firstName("ivaN")
+                                              .salary(1000)
+                                              .build();
+        Predicate predicate = QPredicates.builder()
+                                         .add(filter.getFirstName(), employeeEntity.firstName::containsIgnoreCase)
+                                         .add(filter.getLastName(), employeeEntity.lastName::containsIgnoreCase)
+                                         .add(filter.getSalary(), employeeEntity.salary::goe)
+                                         .buildAnd();
+
+        Iterable<EmployeeEntity> result = employeeRepository.findAll(predicate);
+        assertTrue(result.iterator().hasNext());
+        System.out.println();
     }
 
 }
